@@ -31,45 +31,45 @@ __contact__ = "https://www.linkedin.com/in/mykhailo-datsyk/"
 
 
 def show_error(msg):
-    print("Shotgun Error | Cinema engine | %s " % msg)
+    print("ShotGrid Error | Cinema engine | %s " % msg)
     gui.MessageDialog(
-        "Shotgun Error 'Cinema engine': \n {}".format(msg),
+        "ShotGrid Error 'Cinema engine': \n {}".format(msg),
         type=c4d.GEMB_OK
     )
 
 def show_warning(msg):
     gui.MessageDialog(
-        "Shotgun Warning 'Cinema engine': \n {}".format(msg),
+        "ShotGrid Warning 'Cinema engine': \n {}".format(msg),
         type=c4d.GEMB_OK
     )
 
 
 def show_info(msg):
     gui.MessageDialog(
-        "Shotgun Info 'Cinema engine': \n {}".format(msg),
+        "ShotGrid Info 'Cinema engine': \n {}".format(msg),
         type=c4d.GEMB_OK
     )
 
 
 def display_error(msg):
     t = time.asctime(time.localtime())
-    print("%s - Shotgun Error | Cinema engine | %s " % (t, msg))
+    print("%s - ShotGrid Error | Cinema engine | %s " % (t, msg))
 
 
 def display_warning(msg):
     t = time.asctime(time.localtime())
-    print("%s - Shotgun Warning | Cinema engine | %s " % (t, msg))
+    print("%s - ShotGrid Warning | Cinema engine | %s " % (t, msg))
 
 
 def display_info(msg):
     t = time.asctime(time.localtime())
-    print("%s - Shotgun Info | Cinema engine | %s " % (t, msg))
+    print("%s - ShotGrid Info | Cinema engine | %s " % (t, msg))
 
 
 def display_debug(msg):
     if os.environ.get("TK_DEBUG") == "1":
         t = time.asctime(time.localtime())
-        print("%s - Shotgun Debug | Cinema engine | %s " % (t, msg))
+        print("%s - ShotGrid Debug | Cinema engine | %s " % (t, msg))
 
 
 ###############################################################################
@@ -119,7 +119,7 @@ def refresh_engine(engine_name, prev_context, menu_name):
         except tank.TankError:
             (exc_type, exc_value, exc_traceback) = sys.exc_info()
             message = ""
-            message += "Shotgun Cinema Engine cannot be started:.\n"
+            message += "ShotGrid Cinema Engine cannot be started:.\n"
             message += "Please contact you technical support team for more "
             message += "information.\n\n"
             message += "Exception: %s - %s\n" % (exc_type, exc_value)
@@ -129,7 +129,7 @@ def refresh_engine(engine_name, prev_context, menu_name):
             display_error(message)
             return
 
-    # shotgun menu may have been removed, so add it back in if its not already
+    # ShotGrid menu may have been removed, so add it back in if its not already
     # there.
     current_engine.create_shotgun_menu()
 
@@ -179,7 +179,7 @@ class CinemaEngine(Engine):
     def __register_open_log_folder_command(self):
         """
         # add a 'open log folder' command to the engine's context menu
-        # note: we make an exception for the shotgun engine which is a
+        # note: we make an exception for the ShotGrid engine which is a
         # special case.
         """
         if self.name != SHOTGUN_ENGINE_NAME:
@@ -257,7 +257,7 @@ class CinemaEngine(Engine):
         Runs after the engine is set up but before any apps have been
         initialized.
         """
-        # unicode characters returned by the shotgun api need to be converted
+        # unicode characters returned by the ShotGrid api need to be converted
         # to display correctly in all of the app windows
         from tank.platform.qt import QtCore
 
@@ -283,15 +283,15 @@ class CinemaEngine(Engine):
         cinema_ver = c4d.GetC4DVersion()/1000
 
         if cinema_ver < 19:
-            msg = "Shotgun integration is not compatible with Cinema "
+            msg = "ShotGrid integration is not compatible with Cinema "
             msg += "versions older than 20.0"
             raise tank.TankError(msg)
 
         if cinema_ver > 19:
             # show a warning that this version of Cinema isn't yet fully
-            # tested with Shotgun:
+            # tested with ShotGrid:
             msg = (
-                "The Shotgun Pipeline Toolkit has not yet been fully tested "
+                "The ShotGrid Pipeline Toolkit has not yet been fully tested "
                 "with Cinema R%s.\n"
                 "You can continue to use Toolkit but you may experience bugs "
                 "or instability."
@@ -344,20 +344,20 @@ class CinemaEngine(Engine):
         # add qt paths and dlls
         self._init_pyside()
 
-        # default menu name is Shotgun but this can be overriden
+        # default menu name is ShotGrid but this can be overriden
         # in the configuration to be Sgtk in case of conflicts
-        self._menu_name = "Shotgun"
+        self._menu_name = "ShotGrid"
         if self.get_setting("use_sgtk_as_menu_name", False):
             self._menu_name = "Sgtk"
 
     def create_shotgun_menu(self):
         """
-        Creates the main shotgun menu in cinema.
+        Creates the main ShotGrid menu in cinema.
         Note that this only creates the menu, not the child actions
         :return: bool
         """
 
-        # only create the shotgun menu if not in batch mode and menu doesn't
+        # only create the ShotGrid menu if not in batch mode and menu doesn't
         # already exist
         if self.has_ui:
             # create our menu handler
@@ -425,9 +425,8 @@ class CinemaEngine(Engine):
                 " changing context."
             )
 
-            # finally create the menu with the new context if needed
-            if old_context != new_context:
-                self.create_shotgun_menu()
+            # finally create the menu with the new context
+            self.create_shotgun_menu()
 
     def _run_app_instance_commands(self):
         """
@@ -472,7 +471,7 @@ class CinemaEngine(Engine):
                     # Run all commands of the given app instance.
                     # Run these commands once Cinema will have completed its
                     # UI update and be idle in order to run them after the ones
-                    # that restore the persisted Shotgun app panels.
+                    # that restore the persisted ShotGrid app panels.
                     for (
                         command_name,
                         command_function,
@@ -489,7 +488,7 @@ class CinemaEngine(Engine):
                     # 'run_at_startup' setting.
                     # Run this command once Cinema will have completed its
                     # UI update and be idle in order to run it after the ones
-                    # that restore the persisted Shotgun app panels.
+                    # that restore the persisted ShotGrid app panels.
                     command_function = command_dict.get(setting_command_name)
                     if command_function:
                         self.logger.debug(
@@ -521,72 +520,93 @@ class CinemaEngine(Engine):
         """
         self.logger.debug("%s: Destroying...", self)
 
+    def _detect_pyside(self):
+        """Check if Pyside, Pyside2, or PySide6 is available..."""
+
+        # first see if pyside2 is present
+        try:
+            import PySide6
+        except:
+            self.logger.error("PySide6 not detected...")
+        else:
+            # looks like pyside2 is already working! No need to do anything
+            return True, "PySide6"
+
+        # then see if pyside is present
+        try:
+            import PySide2
+        except:
+            self.logger.error("PySide2 not detected...")
+        else:
+            # looks like pyside2 is already working! No need to do anything
+            return True, "PySide2"
+
+        try:
+            import PySide
+        except:
+            self.logger.error("PySide not detected...")
+        else:
+            # looks like pyside2 is already working! No need to do anything
+            return True, "PySide"
+
+        return False, "No valid version of PySide was detected."
+
     def _init_pyside(self):
         """
         Handles the pyside init
         """
+        self.logger.debug("Initializing PySide...")
+        self.logger.debug(os.getenv("SHOTGUN_DESKTOP_INSTALL_PATH"))
 
-        # first see if pyside2 is present
-        try:
-            from PySide2 import QtGui
-        except:
-            # fine, we don't expect PySide2 to be present just yet
-            self.logger.debug("PySide2 not detected - trying for PySide now...")
-        else:
-            # looks like pyside2 is already working! No need to do anything
-            self.logger.debug(
-                "PySide2 detected - the existing version will be used."
-            )
-            return
-
-        # then see if pyside is present
-        try:
-            from PySide import QtGui
-        except:
-            # must be that a PySide version is not installed,
-            self.logger.debug(
-                "PySide not detected - it will be added to the setup now..."
-            )
-        else:
-            # looks like pyside is already working! No need to do anything
-            self.logger.debug(
-                "PySide detected - the existing version will be used."
-            )
+        pyside_detected, pyside_version = self._detect_pyside()
+        if pyside_detected:
+            self.logger.debug("{} detected!".format(pyside_version))
             return
 
         current_os = sys.platform.lower()
         if current_os == "darwin":
             desktop_path = os.environ.get("SHOTGUN_DESKTOP_INSTALL_PATH",
                                           "/Applications/Shotgun.app")
-            sys.path.append(os.path.join(desktop_path, "Contents", "Resources",
+
+            if os.path.exists(desktop_path):
+                self.logger.debug("Adding %s to sys.path", desktop_path)
+                sys.path.append(os.path.join(desktop_path, "Contents", "Resources",
                                          "Python", "lib", "python2.7",
                                          "site-packages"))
 
         elif current_os == "win32":
-            desktop_path = os.environ.get("SHOTGUN_DESKTOP_INSTALL_PATH",
-                                          "C:/Program Files/Shotgun")
-            sys.path.append(os.path.join(desktop_path,
-                                         "Python", "Lib", "site-packages"))
+            desktop2_python_path = f"""{os.environ.get('SHOTGUN_DESKTOP_INSTALL_PATH', 
+                                                     'C:/Program Files/Shotgun')}/Python3/Lib/site-packages"""
+            if os.path.exists(desktop2_python_path):
+                self.logger.debug("Adding %s to sys.path", desktop2_python_path)
+                sys.path.append(desktop2_python_path)
+
+            else:
+                desktop_python_path = f"""{os.environ.get('SHOTGUN_DESKTOP_INSTALL_PATH', 
+                                                         'C:/Program Files/Shotgun')}/Python/Lib/site-packages"""
+                if os.path.exists(desktop_python_path):
+                    self.logger.debug("Adding %s to sys.path", desktop_python_path)
+                    sys.path.append(desktop_python_path)
 
         elif current_os == "linux2":
             desktop_path = os.environ.get("SHOTGUN_DESKTOP_INSTALL_PATH",
                                           "/opt/Shotgun/Shotgun")
-            sys.path.append(os.path.join(desktop_path,
-                                         "Python", "Lib", "site-packages"))
-
+            if os.path.exists(desktop_path):
+                self.logger.debug("Adding %s to sys.path", desktop_path)
+                sys.path.append(os.path.join(desktop_path,
+                                             "Python", "Lib", "site-packages"))
 
         else:
             self.logger.error("Unknown platform - cannot initialize PySide!")
 
-        # now try to import it
-        try:
-            from PySide import QtGui
-        except Exception as exception:
-            traceback.print_exc()
+        pyside_detected, pyside_version = self._detect_pyside()
+        if pyside_detected:
+            self.logger.debug("{} detected!".format(pyside_version))
+            return
+        else:
             self.logger.error(
                 "PySide could not be imported! Apps using pyside will not "
-                "operate correctly! Error reported: %s",
-                exception,
+                "operate correctly!"
             )
 
     def _get_dialog_parent(self):
@@ -619,15 +639,15 @@ class CinemaEngine(Engine):
         :type record: :class:`~python.logging.LogRecord`
         """
         # Give a standard format to the message:
-        #     Shotgun <basename>: <message>
+        #     ShotGrid <basename>: <message>
         # where "basename" is the leaf part of the logging record name,
         # for example "tk-multi-shotgunpanel" or "qt_importer".
         if record.levelno < logging.INFO:
             formatter = logging.Formatter(
-                "Debug: Shotgun %(basename)s: %(message)s"
+                "Debug: ShotGrid %(basename)s: %(message)s"
             )
         else:
-            formatter = logging.Formatter("Shotgun %(basename)s: %(message)s")
+            formatter = logging.Formatter("ShotGrid %(basename)s: %(message)s")
 
         msg = formatter.format(record)
 
@@ -679,7 +699,7 @@ class CinemaEngine(Engine):
             c4d._shotgun_cache = {'DOCUMENT_CONTEXT_MAP': {}}
 
     def get_document_context(self, doc_path):
-        '''Retrieve a shotgun context using a document's file path.
+        '''Retrieve a ShotGrid context using a document's file path.
 
         Falls back to tk.context_from_path.
         '''
