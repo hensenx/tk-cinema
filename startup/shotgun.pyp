@@ -34,7 +34,7 @@ menu_prebuild = [
     ['Load...', '3279052'],
     ['Reload and Restart', '5919542'],
     ['Work Area Info...', '2574358'],
-    ['Shotgun Panel...', '2399777'],
+    ['ShotGrid Panel...', '2399777'],
     ['Publish...', '3378887'],
     ['Sync Frame Range with Shotgun', '3366874'],
     ['Snapshot History...', '3313077'],
@@ -159,7 +159,7 @@ class SceneChangeEvent(c4d.plugins.MessageData):
 def EnhanceMainMenu():
     mainMenu = c4d.gui.GetMenuResource("M_EDITOR")
     menu = c4d.BaseContainer()
-    menu.InsData(c4d.MENURESOURCE_SUBTITLE, "Shotgun")
+    menu.InsData(c4d.MENURESOURCE_SUBTITLE, "ShotGrid")
 
     submenu = c4d.BaseContainer()
     submenu.InsData(c4d.MENURESOURCE_SUBTITLE, "{}".format(engine.context))
